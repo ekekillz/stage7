@@ -1,0 +1,58 @@
+name: CI/CD Pipeline
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build Docker image
+      run: |
+        docker build -t backend:${{ github.sha }} .
+        docker save backend:${{ github.sha }} > backend_image.tar
+
+    - name: Archive Docker image and compose files
+      run: |
+        tar -czf docker-files.tar.gz backend_image.tar docker-compose.staging.yml docker-compose.production.yml
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: docker-files
+        path: docker-files.tar.gz
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: docker-files
+
+    - name: Extract files
+      run: tar -xzf docker-files.tar.gz
+
+    - name: Deploy to server
+      env:
+        PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        HOST: ${{ secrets.SERVER_HOST }}
+        USER: ${{ secrets.SERVER_USERNAME }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+        scp -i private_key -o StrictHostKeyChecking=no image.tar docker-compose.*.yml $USER@$HOST:~/deploy/
+        ssh -i private_key -o StrictHostKeyChecking=no $USER@$HOST '
+          cd ~/deploy
+          docker load < image.tar
+          echo "CI_COMMIT_SHA=${{ github.sha }}" > .env
+          docker-compose -f docker-compose.production.yml up -d
+        '
+        rm -f private_key
