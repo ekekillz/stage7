@@ -1,0 +1,23 @@
+docker run -d \
+  --name postgres-container \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DB=db_name \
+  -p 5432:5432 --rm \
+  -v postgres-data:/var/lib/postgresql/data \
+  postgres
+
+docker exec postgres-container /bin/sh
+  docker run -d \
+    --name golang-backend \
+    -e DATABASE_URL=postgres://postgres:password@localhost:5432/db_name \
+    --env-file app.env \
+    -p 8019:8019 \
+    golang
+
+
+    docker run -d \
+    --name golang-backend6 \
+    -e DATABASE_URL=postgres://postgres:password@localhost:5432/db_name \
+    -p 8019:8019 \
+    golang
