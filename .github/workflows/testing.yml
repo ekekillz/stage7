@@ -20,7 +20,7 @@ jobs:
 
     - name: Archive Docker image and compose files
       run: |
-        tar -czf docker-files.tar.gz backend_image.tar docker-compose.staging.yml docker-compose.production.yml
+        tar -czf docker-files.tar.gz backend_image.tar docker-compose.yml
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
