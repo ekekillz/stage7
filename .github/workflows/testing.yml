@@ -53,6 +53,6 @@ jobs:
           cd ~/deploy
           docker load < backend_image.tar
           echo "CI_COMMIT_SHA=${{ github.sha }}" > .env
-          docker-compose -f docker-compose.production.yml up -d
+          docker-compose -f docker-compose.yml up -d
         '
         rm -f private_key
