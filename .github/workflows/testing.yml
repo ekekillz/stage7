@@ -51,7 +51,7 @@ jobs:
         scp -i private_key -o StrictHostKeyChecking=no image.tar docker-compose.*.yml $USER@$HOST:~/deploy/
         ssh -i private_key -o StrictHostKeyChecking=no $USER@$HOST '
           cd ~/deploy
-          docker load < image.tar
+          docker load < backend_image.tar
           echo "CI_COMMIT_SHA=${{ github.sha }}" > .env
           docker-compose -f docker-compose.production.yml up -d
         '
