@@ -33,5 +33,7 @@ COPY --from=wait /wait-for-it.sh /wait-for-it.sh
 # Install bash (required for wait-for-it script)
 RUN apk add --no-cache bash
 
+EXPOSE 8019
+
 # Wait for DB and Redis, then start the application
 CMD /wait-for-it.sh $DB_HOST:$DB_PORT -t 10 -- /wait-for-it.sh $REDIS_HOST:$REDIS_PORT -t 10 -- app-name
