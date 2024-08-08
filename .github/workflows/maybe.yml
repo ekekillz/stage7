@@ -10,6 +10,12 @@ jobs:
     #   name: proddde
     #   url: ${{ steps.deploy.outputs.preview-url }}
     runs-on: ubuntu-latest
+    env:
+      SSH_USERNAME: ${{ secrets.SERVER_USERNAME }}
+      SSH_HOST: ${{ secrets.SERVER_HOST }}
+      SSH_PORT: ${{ secrets.SERVER_PORT }}
+      SSH_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
+
     steps:
       - name: Checkout to branch
         uses: actions/checkout@v4
@@ -17,11 +23,11 @@ jobs:
         name: Pull Request Deploy
         uses: hngprojects/pr-deploy@feat_private_key
         with:
-          server_host: ${{ secrets.SERVER_HOST }}
-          server_username: ${{ secrets.SERVER_USERNAME }}
-          server_password: ${{ secrets.SERVER_PASSWORD }}
-          server_port: ${{ secrets.SERVER_PORT }}
-          server_private_key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          server_host: ${{ env.SSH_HOST }}
+          server_username: ${{ env.SSH_USERNAME }}
+          # server_password: ${{ secrets.SERVER_PASSWORD }}
+          server_port: ${{ env.SSH_PORT }}
+          server_private_key: ${{ env.SSH_PRIVATE_KEY }}
           comment: true
           context: '.'
           dockerfile: 'Dockerfile'
