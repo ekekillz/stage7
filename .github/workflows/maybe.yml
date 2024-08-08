@@ -7,7 +7,7 @@ on:
 jobs:
   deploy-pr:
     # environment: 
-    #   name: production
+    #   name: prod
     #   url: ${{ steps.deploy.outputs.preview-url }}
     runs-on: ubuntu-latest
     steps:
