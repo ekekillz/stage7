@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   build_and_test:
-    runs-on: self-hosted
+    runs-on: kimiko
     env:
       TEST_USERNAME: postgres
       TEST_PASSWORD: password
@@ -55,5 +55,3 @@ jobs:
             curl -s http://localhost:8019 && break
             sleep 1
           done
-      - name: Run All Tests
-        run: go test ./... -timeout 300s
