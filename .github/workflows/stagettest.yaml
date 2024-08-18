@@ -4,7 +4,7 @@ on: workflow_dispatch
 
 jobs:
   build_and_test:
-    runs-on: kimiko
+    runs-on: Telex
     env:
       TEST_USERNAME: postgres
       TEST_PASSWORD: password
