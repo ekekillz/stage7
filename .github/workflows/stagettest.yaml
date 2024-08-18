@@ -45,8 +45,6 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: "1.22.1"
-      - name: Create app config file
-        run: cp app-sample.env app.env
       - name: Build the application
         run: go build -o development_app
       - name: Run the application
